@@ -5,6 +5,7 @@ import {
   Button,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -20,12 +21,6 @@ import { useAlertContext } from "../context/alertContext";
 const LandingSection = () => {
   const { isLoading, response, submit } = useSubmit();
   const { onOpen } = useAlertContext();
-
-  const [input, setInput] = useState("");
-
-  const handleInputChange = (e) => setInput(e.target.value);
-
-  const isError = input === "";
 
   const formik = useFormik({
     initialValues: {
@@ -44,6 +39,20 @@ const LandingSection = () => {
       comment: Yup.string().required(),
     }),
   });
+//HERE
+const [message, setMessage] = useState("");
+const [type, setType] = useState("");
+
+const fetchData = async() => {
+  const dataMessage = await response.message;
+  const dataType= await response.type;
+  setMessage(dataMessage);
+  setType(dataType);
+
+}
+  useEffect(() => {
+    fetchData();
+  }, [response]);
 
   return (
     <FullScreenSection
@@ -60,40 +69,52 @@ const LandingSection = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              formik.handleSubmit(e);
+              formik.handleSubmit();
             }}
           >
             <VStack spacing={4}>
-              <FormControl isInvalid={isError}>
+              <FormControl isInvalid={!formik.values.firstName}>
                 <FormLabel htmlFor="firstName">Name</FormLabel>
                 <Input
                   id="firstName"
                   name="firstName"
-                  onChange={handleInputChange}
-                  value={input}
+                  onChange={formik.handleChange}
+                  value={formik.values.firstName}
                   {...formik.getFieldProps("firstName")}
                 />
-                {isError && <FormErrorMessage>Required</FormErrorMessage>}
+                {formik.values.firstName ? (
+                  <FormHelperText color="grey">
+                    Enter your first name.
+                  </FormHelperText>
+                ) : (
+                  <FormErrorMessage>Required.</FormErrorMessage>
+                )}
               </FormControl>
-              <FormControl isInvalid={isError}>
+              <FormControl isInvalid={!formik.values.email}>
                 <FormLabel htmlFor="email">Email Address</FormLabel>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  onChange={handleInputChange}
-                  value={input}
+                  onChange={formik.handleChange}
+                  value={formik.values.email}
                   {...formik.getFieldProps("email")}
                 />
-                {isError && <FormErrorMessage>Required</FormErrorMessage>}
+                {formik.values.email ? (
+                  <FormHelperText color="grey">
+                    Enter the email you'd like to be reached on.
+                  </FormHelperText>
+                ) : (
+                  <FormErrorMessage>Required.</FormErrorMessage>
+                )}
               </FormControl>
               <FormControl>
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
                 <Select
                   id="type"
                   name="type"
-                  onChange={handleInputChange}
-                  value={input}
+                  onChange={formik.handleChange}
+                  value={formik.values.type}
                   {...formik.getFieldProps("type")}
                 >
                   <option value="hireMe">Freelance project proposal</option>
@@ -103,20 +124,27 @@ const LandingSection = () => {
                   <option value="other">Other</option>
                 </Select>
               </FormControl>
-              <FormControl isInvalid={isError}>
+              <FormControl isInvalid={!formik.values.comment}>
                 <FormLabel htmlFor="comment">Your message</FormLabel>
                 <Textarea
                   id="comment"
                   name="comment"
                   height={250}
-                  onChange={handleInputChange}
-                  value={input}
+                  onChange={formik.handleChange}
+                  value={formik.values.comment}
                   {...formik.getFieldProps("comment")}
                 />
-                {isError && <FormErrorMessage>Required</FormErrorMessage>}
+                {formik.values.comment ? (
+                  <FormHelperText color="grey">
+                    Provide details of your enquiry.
+                  </FormHelperText>
+                ) : (
+                  <FormErrorMessage>Required.</FormErrorMessage>
+                )}
               </FormControl>
               <Button type="submit" colorScheme="purple" width="full">
-                Submit
+                {isLoading ? "Loading" : "Submit"}
+                
               </Button>
             </VStack>
           </form>
