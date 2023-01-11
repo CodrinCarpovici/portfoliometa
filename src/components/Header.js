@@ -63,10 +63,21 @@ const Header = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <nav>{/* Add social media links based on the `socials` data */}</nav>
+          <nav>
+            <HStack spacing={6}>
+              {socials.map((e) => {
+                return (
+                  <a href={e.url}>
+                    <FontAwesomeIcon icon={e.icon} size="2x" />
+                  </a>
+                );
+              })}
+            </HStack>
+          </nav>
           <nav>
             <HStack spacing={8}>
-              {/* Add links to Projects and Contact me section */}
+              <a href="/#projects" onClick={handleClick("projects")}>Projects</a>
+              <a href="/#contact-me" onClick={handleClick("contactme")}>Contact Me</a>
             </HStack>
           </nav>
         </HStack>
