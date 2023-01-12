@@ -39,7 +39,8 @@ const LandingSection = () => {
       comment: Yup.string().required(),
     }),
   });
-//HERE
+//HERE CONTINUE
+//FIX onSubmit returning error everytime instead of 50-50 success
 const [message, setMessage] = useState("");
 const [type, setType] = useState("");
 
@@ -52,8 +53,14 @@ const fetchData = async() => {
 }
   useEffect(() => {
     fetchData();
+    console.log(response);
   }, [response]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    formik.handleSubmit();
+    
+  }
   return (
     <FullScreenSection
       isDarkBackground
@@ -67,10 +74,7 @@ const fetchData = async() => {
         </Heading>
         <Box p={6} rounded="md" w="100%">
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              formik.handleSubmit();
-            }}
+            onSubmit={handleSubmit}
           >
             <VStack spacing={4}>
               <FormControl isInvalid={!formik.values.firstName}>
