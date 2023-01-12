@@ -29,38 +29,34 @@ const LandingSection = () => {
       type: "",
       comment: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, actions) => {
+      actions.preventDefault();
       submit(values);
+      actions.resetForm();
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required(),
       email: Yup.string().required(),
-      type: Yup.string().required(),
       comment: Yup.string().required(),
     }),
   });
-//HERE CONTINUE
-//FIX onSubmit returning error everytime instead of 50-50 success
-const [message, setMessage] = useState("");
-const [type, setType] = useState("");
 
-const fetchData = async() => {
-  const dataMessage = await response.message;
-  const dataType= await response.type;
-  setMessage(dataMessage);
-  setType(dataType);
+  //HERE CONTINUE
+  //FIX onSubmit returning error everytime instead of 50-50 success
+  const [message, setMessage] = useState("");
+  const [type, setType] = useState("");
 
-}
+  const fetchData = async () => {
+    const dataMessage = await response.message;
+    const dataType = await response.type;
+    setMessage(dataMessage);
+    setType(dataType);
+  };
   useEffect(() => {
     fetchData();
     console.log(response);
   }, [response]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    formik.handleSubmit();
-    
-  }
   return (
     <FullScreenSection
       isDarkBackground
@@ -68,56 +64,44 @@ const fetchData = async() => {
       py={16}
       spacing={8}
     >
-      <VStack w="1024px" p={32} alignItems="flex-start">
+      <VStack
+        w="1024px"
+        p={32}
+        alignItems="flex-start"
+        onSubmit={formik.handleSubmit}
+      >
         <Heading as="h1" id="contactme-section">
           Contact me
         </Heading>
         <Box p={6} rounded="md" w="100%">
-          <form
-            onSubmit={handleSubmit}
-          >
+          <form>
             <VStack spacing={4}>
-              <FormControl isInvalid={!formik.values.firstName}>
+              <FormControl isInvalid={formik.errors.firstName && formik.touched.firstName}>
                 <FormLabel htmlFor="firstName">Name</FormLabel>
                 <Input
                   id="firstName"
                   name="firstName"
-                  onChange={formik.handleChange}
                   value={formik.values.firstName}
                   {...formik.getFieldProps("firstName")}
                 />
-                {formik.values.firstName ? (
-                  <FormHelperText color="grey">
-                    Enter your first name.
-                  </FormHelperText>
-                ) : (
                   <FormErrorMessage>Required.</FormErrorMessage>
-                )}
               </FormControl>
-              <FormControl isInvalid={!formik.values.email}>
+              <FormControl isInvalid={formik.errors.email && formik.touched.email}>
                 <FormLabel htmlFor="email">Email Address</FormLabel>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  onChange={formik.handleChange}
                   value={formik.values.email}
                   {...formik.getFieldProps("email")}
                 />
-                {formik.values.email ? (
-                  <FormHelperText color="grey">
-                    Enter the email you'd like to be reached on.
-                  </FormHelperText>
-                ) : (
                   <FormErrorMessage>Required.</FormErrorMessage>
-                )}
               </FormControl>
               <FormControl>
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
                 <Select
                   id="type"
                   name="type"
-                  onChange={formik.handleChange}
                   value={formik.values.type}
                   {...formik.getFieldProps("type")}
                 >
@@ -128,27 +112,19 @@ const fetchData = async() => {
                   <option value="other">Other</option>
                 </Select>
               </FormControl>
-              <FormControl isInvalid={!formik.values.comment}>
+              <FormControl isInvalid={formik.errors.comment && formik.touched.comment}>
                 <FormLabel htmlFor="comment">Your message</FormLabel>
                 <Textarea
                   id="comment"
                   name="comment"
                   height={250}
-                  onChange={formik.handleChange}
                   value={formik.values.comment}
                   {...formik.getFieldProps("comment")}
                 />
-                {formik.values.comment ? (
-                  <FormHelperText color="grey">
-                    Provide details of your enquiry.
-                  </FormHelperText>
-                ) : (
                   <FormErrorMessage>Required.</FormErrorMessage>
-                )}
               </FormControl>
               <Button type="submit" colorScheme="purple" width="full">
                 {isLoading ? "Loading" : "Submit"}
-                
               </Button>
             </VStack>
           </form>
