@@ -1,0 +1,10 @@
+.active {
+  position: fixed;
+  transition: 0.3s ease-in-out;
+  z-index: 40;
+}
+.hidden {
+  position: fixed;
+  top: -200px;
+  transition: 0.3s ease-in-out;
+}
