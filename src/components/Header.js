@@ -79,9 +79,6 @@ const Header = () => {
       left={0}
       right={0}
       translateY={0}
-      transitionProperty="transform"
-      transitionDuration=".3s"
-      transitionTimingFunction="ease-in-out"
       backgroundColor="#18181b"
       className={`active ${show && 'hidden'}`}
     >

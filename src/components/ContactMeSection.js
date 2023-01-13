@@ -29,8 +29,7 @@ const LandingSection = () => {
       fetch(response).then(() => onOpen(response.type, response.message));
     };
     fetchData();
-    console.log(response);
-    console.log(onOpen);
+    
   }, [response]);
 
   const formik = useFormik({
@@ -42,11 +41,7 @@ const LandingSection = () => {
     },
     onSubmit: (values, actions) => {
       submit(values.type, values);
-      //STILL BROKEN
-      //const reset = async() => {
-      // const type = await response.type;
-      //return type === "success" && actions.resetForm();
-      //}
+
       //RESET
       actions.resetForm()
     },
