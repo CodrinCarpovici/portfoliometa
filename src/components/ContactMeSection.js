@@ -24,11 +24,10 @@ const LandingSection = () => {
   const { isLoading, response, submit } = useSubmit();
   const { onOpen } = useAlertContext();
 
-  const fetchData = () => {
-    fetch(response)
-      .then(() => onOpen(response.type, response.message));
-  };
   useEffect(() => {
+    const fetchData = () => {
+      fetch(response).then(() => onOpen(response.type, response.message));
+    };
     fetchData();
     console.log(response);
     console.log(onOpen);
@@ -41,12 +40,15 @@ const LandingSection = () => {
       type: "",
       comment: "",
     },
-    onSubmit: async (values, actions) => {
+    onSubmit: (values, actions) => {
       submit(values.type, values);
       //STILL BROKEN
-      
+      //const reset = async() => {
+      // const type = await response.type;
+      //return type === "success" && actions.resetForm();
+      //}
       //RESET
-      response.type === "success" && actions.resetForm();
+      actions.resetForm()
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required(),
