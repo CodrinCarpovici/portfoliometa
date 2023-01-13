@@ -30,13 +30,13 @@ const LandingSection = () => {
       comment: "",
     },
     onSubmit: (values, actions) => {
-      actions.preventDefault();
-      submit(values);
+      submit(values.type, values);
       actions.resetForm();
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required(),
       email: Yup.string().required(),
+      type: Yup.string().required(),
       comment: Yup.string().required(),
     }),
   });
@@ -64,19 +64,16 @@ const LandingSection = () => {
       py={16}
       spacing={8}
     >
-      <VStack
-        w="1024px"
-        p={32}
-        alignItems="flex-start"
-        onSubmit={formik.handleSubmit}
-      >
+      <VStack w="1024px" p={32} alignItems="flex-start">
         <Heading as="h1" id="contactme-section">
           Contact me
         </Heading>
         <Box p={6} rounded="md" w="100%">
-          <form>
+          <form onSubmit={(e) => { e.preventDefault(); formik.handleSubmit(e)}}>
             <VStack spacing={4}>
-              <FormControl isInvalid={formik.errors.firstName && formik.touched.firstName}>
+              <FormControl
+                isInvalid={formik.errors.firstName && formik.touched.firstName}
+              >
                 <FormLabel htmlFor="firstName">Name</FormLabel>
                 <Input
                   id="firstName"
@@ -84,9 +81,11 @@ const LandingSection = () => {
                   value={formik.values.firstName}
                   {...formik.getFieldProps("firstName")}
                 />
-                  <FormErrorMessage>Required.</FormErrorMessage>
+                <FormErrorMessage>Required.</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={formik.errors.email && formik.touched.email}>
+              <FormControl
+                isInvalid={formik.errors.email && formik.touched.email}
+              >
                 <FormLabel htmlFor="email">Email Address</FormLabel>
                 <Input
                   id="email"
@@ -95,9 +94,11 @@ const LandingSection = () => {
                   value={formik.values.email}
                   {...formik.getFieldProps("email")}
                 />
-                  <FormErrorMessage>Required.</FormErrorMessage>
+                <FormErrorMessage>Required.</FormErrorMessage>
               </FormControl>
-              <FormControl>
+              <FormControl
+                isInvalid={formik.errors.type && formik.touched.type}
+              >
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
                 <Select
                   id="type"
@@ -111,8 +112,11 @@ const LandingSection = () => {
                   </option>
                   <option value="other">Other</option>
                 </Select>
+                <FormErrorMessage>Required.</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={formik.errors.comment && formik.touched.comment}>
+              <FormControl
+                isInvalid={formik.errors.comment && formik.touched.comment}
+              >
                 <FormLabel htmlFor="comment">Your message</FormLabel>
                 <Textarea
                   id="comment"
@@ -121,7 +125,7 @@ const LandingSection = () => {
                   value={formik.values.comment}
                   {...formik.getFieldProps("comment")}
                 />
-                  <FormErrorMessage>Required.</FormErrorMessage>
+                <FormErrorMessage>Required.</FormErrorMessage>
               </FormControl>
               <Button type="submit" colorScheme="purple" width="full">
                 {isLoading ? "Loading" : "Submit"}
