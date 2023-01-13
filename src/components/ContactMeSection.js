@@ -24,20 +24,14 @@ const LandingSection = () => {
   const { isLoading, response, submit } = useSubmit();
   const { onOpen } = useAlertContext();
 
-  //HERE CONTINUE
-  const [message, setMessage] = useState("");
-  const [type, setType] = useState("");
-
-  const fetchData = async () => {
-    const dataMessage = await response.message;
-    const dataType = await response.type;
-    setMessage(dataMessage);
-    setType(dataType);
+  const fetchData = () => {
+    fetch(response)
+      .then(() => onOpen(response.type, response.message));
   };
   useEffect(() => {
     fetchData();
     console.log(response);
-    
+    console.log(onOpen);
   }, [response]);
 
   const formik = useFormik({
@@ -47,10 +41,12 @@ const LandingSection = () => {
       type: "",
       comment: "",
     },
-    onSubmit: (values, actions) => {
+    onSubmit: async (values, actions) => {
       submit(values.type, values);
-      onOpen(type, message);
-      actions.resetForm();
+      //STILL BROKEN
+      
+      //RESET
+      response.type === "success" && actions.resetForm();
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required(),
@@ -114,11 +110,15 @@ const LandingSection = () => {
                   value={formik.values.type}
                   {...formik.getFieldProps("type")}
                 >
-                  <option style={{ color: 'black' }} value="hireMe">Freelance project proposal</option>
-                  <option style={{ color: 'black' }} value="openSource">
+                  <option style={{ color: "black" }} value="hireMe">
+                    Freelance project proposal
+                  </option>
+                  <option style={{ color: "black" }} value="openSource">
                     Open source consultancy session
                   </option>
-                  <option style={{ color: 'black' }} value="other">Other</option>
+                  <option style={{ color: "black" }} value="other">
+                    Other
+                  </option>
                 </Select>
                 <FormErrorMessage>Required.</FormErrorMessage>
               </FormControl>
@@ -136,7 +136,11 @@ const LandingSection = () => {
                 <FormErrorMessage>Required.</FormErrorMessage>
               </FormControl>
               <Button type="submit" colorScheme="purple" width="full">
-                {isLoading ? <FontAwesomeIcon icon={faSync} className="fa-spin"/> : "Submit"}
+                {isLoading ? (
+                  <FontAwesomeIcon icon={faSync} className="fa-spin" />
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </VStack>
           </form>
