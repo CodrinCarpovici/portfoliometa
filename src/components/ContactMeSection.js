@@ -5,7 +5,6 @@ import {
   Button,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -18,31 +17,14 @@ import FullScreenSection from "./FullScreenSection";
 import useSubmit from "../hooks/useSubmit";
 import { useAlertContext } from "../context/alertContext";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSync } from "@fortawesome/free-solid-svg-icons";
+
 const LandingSection = () => {
   const { isLoading, response, submit } = useSubmit();
   const { onOpen } = useAlertContext();
 
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      email: "",
-      type: "",
-      comment: "",
-    },
-    onSubmit: (values, actions) => {
-      submit(values.type, values);
-      actions.resetForm();
-    },
-    validationSchema: Yup.object({
-      firstName: Yup.string().required(),
-      email: Yup.string().required(),
-      type: Yup.string().required(),
-      comment: Yup.string().required(),
-    }),
-  });
-
   //HERE CONTINUE
-  //FIX onSubmit returning error everytime instead of 50-50 success
   const [message, setMessage] = useState("");
   const [type, setType] = useState("");
 
@@ -55,7 +37,28 @@ const LandingSection = () => {
   useEffect(() => {
     fetchData();
     console.log(response);
+    
   }, [response]);
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      email: "",
+      type: "",
+      comment: "",
+    },
+    onSubmit: (values, actions) => {
+      submit(values.type, values);
+      onOpen(type, message);
+      actions.resetForm();
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string().required(),
+      email: Yup.string().required(),
+      type: Yup.string().required(),
+      comment: Yup.string().required(),
+    }),
+  });
 
   return (
     <FullScreenSection
@@ -69,7 +72,12 @@ const LandingSection = () => {
           Contact me
         </Heading>
         <Box p={6} rounded="md" w="100%">
-          <form onSubmit={(e) => { e.preventDefault(); formik.handleSubmit(e)}}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              formik.handleSubmit(e);
+            }}
+          >
             <VStack spacing={4}>
               <FormControl
                 isInvalid={formik.errors.firstName && formik.touched.firstName}
@@ -128,7 +136,7 @@ const LandingSection = () => {
                 <FormErrorMessage>Required.</FormErrorMessage>
               </FormControl>
               <Button type="submit" colorScheme="purple" width="full">
-                {isLoading ? "Loading" : "Submit"}
+                {isLoading ? <FontAwesomeIcon icon={faSync} className="fa-spin"/> : "Submit"}
               </Button>
             </VStack>
           </form>
