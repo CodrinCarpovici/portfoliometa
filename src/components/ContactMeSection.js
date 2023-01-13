@@ -114,11 +114,11 @@ const LandingSection = () => {
                   value={formik.values.type}
                   {...formik.getFieldProps("type")}
                 >
-                  <option value="hireMe">Freelance project proposal</option>
-                  <option value="openSource">
+                  <option style={{ color: 'black' }} value="hireMe">Freelance project proposal</option>
+                  <option style={{ color: 'black' }} value="openSource">
                     Open source consultancy session
                   </option>
-                  <option value="other">Other</option>
+                  <option style={{ color: 'black' }} value="other">Other</option>
                 </Select>
                 <FormErrorMessage>Required.</FormErrorMessage>
               </FormControl>
