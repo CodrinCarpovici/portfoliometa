@@ -8,7 +8,6 @@ import {
   faStackOverflow,
 } from "@fortawesome/free-brands-svg-icons";
 import { Box, HStack } from "@chakra-ui/react";
-import "../App.css";
 
 const socials = [
   {
@@ -34,20 +33,20 @@ const socials = [
 ];
 
 const Header = () => {
-  const [position, setPosition] = useState(window.pageYOffset)
-    const [visible, setVisible] = useState(true) 
-    useEffect(()=> {
-        const handleScroll = () => {
-           let moving = window.pageYOffset
-           
-           setVisible(position > moving);
-           setPosition(moving)
-        };
-        window.addEventListener("scroll", handleScroll);
-        return(() => {
-           window.removeEventListener("scroll", handleScroll);
-        })
-    })
+  const [position, setPosition] = useState(window.pageYOffset);
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const handleScroll = () => {
+      let moving = window.pageYOffset;
+
+      setVisible(position > moving);
+      setPosition(moving);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
   const isVisible = visible ? "translateY(0)" : "translateY(-200px)";
 
@@ -95,8 +94,12 @@ const Header = () => {
           </nav>
           <nav>
             <HStack spacing={8}>
-              <a href="/#projects" onClick={handleClick("projects")}>Projects</a>
-              <a href="/#contact-me" onClick={handleClick("contactme")}>Contact Me</a>
+              <a href="/#projects" onClick={handleClick("projects")}>
+                Projects
+              </a>
+              <a href="/#contact-me" onClick={handleClick("contactme")}>
+                Contact Me
+              </a>
             </HStack>
           </nav>
         </HStack>
