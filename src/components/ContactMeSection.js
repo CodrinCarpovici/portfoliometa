@@ -43,13 +43,12 @@ const LandingSection = () => {
       submit(values.type, values);
 
       //RESET
-      actions.resetForm()
+      actions.resetForm();
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required(),
-      email: Yup.string().required(),
-      type: Yup.string().required(),
-      comment: Yup.string().required(),
+      firstName: Yup.string().required("Required."),
+      email: Yup.string().email("Invalid email address").required("Required."),
+      comment: Yup.string().required("Required.").min(25, "Must be at least 25 characters"),
     }),
   });
 
@@ -82,7 +81,7 @@ const LandingSection = () => {
                   value={formik.values.firstName}
                   {...formik.getFieldProps("firstName")}
                 />
-                <FormErrorMessage>Required.</FormErrorMessage>
+                <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
               </FormControl>
               <FormControl
                 isInvalid={formik.errors.email && formik.touched.email}
@@ -95,10 +94,9 @@ const LandingSection = () => {
                   value={formik.values.email}
                   {...formik.getFieldProps("email")}
                 />
-                <FormErrorMessage>Required.</FormErrorMessage>
+                <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
               </FormControl>
               <FormControl
-                isInvalid={formik.errors.type && formik.touched.type}
               >
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
                 <Select
@@ -117,7 +115,6 @@ const LandingSection = () => {
                     Other
                   </option>
                 </Select>
-                <FormErrorMessage>Required.</FormErrorMessage>
               </FormControl>
               <FormControl
                 isInvalid={formik.errors.comment && formik.touched.comment}
@@ -130,7 +127,7 @@ const LandingSection = () => {
                   value={formik.values.comment}
                   {...formik.getFieldProps("comment")}
                 />
-                <FormErrorMessage>Required.</FormErrorMessage>
+                <FormErrorMessage>{formik.errors.comment}</FormErrorMessage>
               </FormControl>
               <Button type="submit" colorScheme="purple" width="full">
                 {isLoading ? (
