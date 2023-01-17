@@ -34,32 +34,22 @@ const socials = [
 ];
 
 const Header = () => {
-  const [show, setShow] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [position, setPosition] = useState(window.pageYOffset)
+    const [visible, setVisible] = useState(true) 
+    useEffect(()=> {
+        const handleScroll = () => {
+           let moving = window.pageYOffset
+           
+           setVisible(position > moving);
+           setPosition(moving)
+        };
+        window.addEventListener("scroll", handleScroll);
+        return(() => {
+           window.removeEventListener("scroll", handleScroll);
+        })
+    })
 
-  const controlHeader = () => {
-    if (typeof window !== 'undefined') { 
-      if (window.scrollY > lastScrollY) { // if scroll down hide the navbar
-        setShow(false); 
-      } else { // if scroll up show the navbar
-        setShow(true);  
-      }
-
-      // remember current page location to use in the next move
-      setLastScrollY(window.scrollY); 
-    }
-  };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', controlHeader);
-
-      // cleanup function
-      return () => {
-        window.removeEventListener('scroll', controlHeader);
-      };
-    }
-  }, [lastScrollY]);
+  const isVisible = visible ? "translateY(0)" : "translateY(-200px)";
 
   const handleClick = (anchor) => () => {
     const id = `${anchor}-section`;
@@ -74,13 +64,16 @@ const Header = () => {
 
   return (
     <Box
-      position="fixed"
+      position="sticky"
       top={0}
       left={0}
       right={0}
       translateY={0}
+      transitionProperty="transform"
+      transitionDuration=".3s"
+      transitionTimingFunction="ease-in-out"
       backgroundColor="#18181b"
-      className={`active ${show && 'hidden'}`}
+      transform={isVisible}
     >
       <Box color="white" maxWidth="1280px" margin="0 auto">
         <HStack
